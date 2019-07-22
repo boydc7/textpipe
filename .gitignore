@@ -29,6 +29,7 @@ obj/
 packages/
 shared-local-instance.db
 ~/
+publish/
 local-rydr-files/
 
 # this may be a bit heavy-handed, see https://raw.githubusercontent.com/JetBrains/resharper-rider-samples/master/.gitignore

@@ -56,11 +56,6 @@ namespace TextWrangler.Services.Filters
                         }
 
                         targetField.Value = Filter(targetField.Value, targetFieldConfiguration.Filters);
-
-                        if (!targetField.Type.IsNullOrEmpty())
-                        {
-
-                        }
                     }
 
                     recordFiltered = true;

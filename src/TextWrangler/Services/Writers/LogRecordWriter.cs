@@ -45,7 +45,7 @@ namespace TextWrangler.Services.Writers
 
                 foreach (var targetField in targetRecord.Fields)
                 {
-                    logText.AppendLine($"{targetField.Name.PadLeft(maxFieldLength)}:\t{targetField.TypedValue}");
+                    logText.AppendLine($"{targetField.Name.PadLeft(maxFieldLength)}:\t{targetField.TypedValue} ({targetField.TypedValue.GetType().Name})");
                 }
 
                 _logger.LogInformation(logText.ToString());

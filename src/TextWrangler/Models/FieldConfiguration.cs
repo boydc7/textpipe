@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TextWrangler.Configuration;
+using TextWrangler.Extensions;
 
 namespace TextWrangler.Models
 {
@@ -87,6 +88,6 @@ namespace TextWrangler.Models
         /// </example>
         public List<string> Filters { get; set; }
 
-        public Type GetSystemType() => _systemType ?? (_systemType = System.Type.GetType(Type));
+        public Type GetSystemType() => _systemType ?? (_systemType = Type.GetSystemType());
     }
 }

@@ -23,13 +23,22 @@ namespace TextWrangler.Console
             var recordConfigName = args[0];
             var fileName = args[1];
 
-            var limit = args.Length > 2
-                            ? args[2].ToInt().Gz(int.MaxValue)
+            var configFile = args.Length > 2
+                                 ? args[2]
+                                 : null;
+
+            var limit = args.Length > 3
+                            ? args[3].ToInt().Gz(int.MaxValue)
                             : int.MaxValue;
 
-            var outputFile = args.Length > 3
-                                 ? args[3]
+            var outputFile = args.Length > 4
+                                 ? args[4]
                                  : null;
+
+            if (!configFile.IsNullOrEmpty())
+            {
+                TextWranglerConfig.TextWranglerConfigFile = configFile;
+            }
 
             // Verify the source file exists
             if (!File.Exists(fileName))
@@ -39,16 +48,16 @@ namespace TextWrangler.Console
                 return;
             }
 
-            // Verify the textwrangler.json file (or configured config file) exists
+            // Verify the config file can be found
             if (!File.Exists(TextWranglerConfig.TextWranglerConfigFile))
             {
-                System.Console.WriteLine($"Could not find TextWranger config file [{TextWranglerConfig.TextWranglerConfigFile}].");
+                System.Console.WriteLine($"Could not find TextWrangler config file [{TextWranglerConfig.TextWranglerConfigFile}].");
 
                 return;
             }
 
             // If outputFile is specified verify it does not exist, or get overwrite permission
-            if (!outputFile.IsNullOrEmpty() && File.Exists(outputFile))
+            if (!outputFile.IsNullOrEmpty() && !outputFile.Equals("null", StringComparison.OrdinalIgnoreCase) && File.Exists(outputFile))
             {
                 System.Console.WriteLine($"Output file [{outputFile}] already exists, if you continue it will be overwritten.");
                 System.Console.WriteLine("To continue, press any key. To cancel, press CTRL+C");
@@ -66,10 +75,12 @@ namespace TextWrangler.Console
             try
             {
                 using(var wrangler = new TextWrangler(recordConfigName,
-                                                      new CsvRecordReader(fileName),
+                                                      new ProgressLoggedRecordReader(new CsvRecordReader(fileName)),
                                                       recordWriter: outputFile.IsNullOrEmpty()
-                                                                        ? (IRecordWriter)LogRecordWriter.Instance
-                                                                        : new CsvRecordWriter(outputFile)))
+                                                                        ? LogRecordWriter.Instance
+                                                                        : outputFile.Equals("null", StringComparison.OrdinalIgnoreCase)
+                                                                            ? (IRecordWriter)NullRecordWriter.Instance
+                                                                            : new CsvRecordWriter(outputFile)))
                 {
                     wrangler.Wrangle(limit);
                 }
@@ -91,7 +102,7 @@ namespace TextWrangler.Console
         private static void PrintUsage()
         {
             System.Console.WriteLine("USAGE:");
-            System.Console.WriteLine("wrangler <recordConfigName> <filename> [<limit>] [<outputFileName>]");
+            System.Console.WriteLine("wrangler <recordConfigName> <filename> [<configFile>] [<limit>] [<outputFileName>]");
             System.Console.WriteLine("");
             System.Console.WriteLine("PARAMS:");
 
@@ -106,6 +117,12 @@ Required.
 Full absolute or relative path to the input CSV file to read.
 ");
 
+            System.Console.WriteLine(@"- configFile:
+Optional.
+Full absolute or relative path to config file to use for wrangling with.
+Defaults to textwrangler.json
+");
+
             System.Console.WriteLine(@"- limit:
 Optional.
 Limit of records to read (attempt to process) from the inputFileName.
@@ -115,6 +132,7 @@ If omitted or <= 0, the entire file is read/processed.
             System.Console.WriteLine(@"- outputFileName:
 Optional.
 Full absolute or relative path to the CSV file to output target records to.
+Use a value of NULL here to output to a null writer (discarded)
 If omitted, records are output to the logger configured for the LogRecordWriter type (by default the console only).
 
 ");

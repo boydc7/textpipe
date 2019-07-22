@@ -75,11 +75,7 @@
         "format": "<Country>",
         "sources": [
           {
-            "name": "Country",
-            "filters": [
-              "trim",
-              "titlecase"
-            ]
+            "name": "Country"
           }
         ]
       },
@@ -88,11 +84,7 @@
         "format": "<Item Type>",
         "sources": [
           {
-            "name": "Item Type",
-            "filters": [
-              "trim",
-              "titlecase"
-            ]
+            "name": "Item Type"
           }
         ]
       },
@@ -109,10 +101,19 @@
       {
         "name": "OrderId",
         "format": "<Order ID>",
-        "type": "System.Int64",
         "sources": [
           {
             "name": "Order ID"
+          }
+        ]
+      },
+      {
+        "name": "ShippedOn",
+        "format": "<Ship Date>",
+        "type": "System.DateTime",
+        "sources": [
+          {
+            "name": "Ship Date"
           }
         ]
       },
@@ -133,6 +134,36 @@
         "sources": [
           {
             "name": "Unit Price"
+          }
+        ]
+      },
+      {
+        "name": "UnitCost",
+        "format": "{<Unit Cost>,0:N4}",
+        "type": "System.Double",
+        "sources": [
+          {
+            "name": "Unit Cost"
+          }
+        ]
+      },
+      {
+        "name": "Revenue",
+        "format": "{<Total Revenue>,0:N4}",
+        "type": "System.Double",
+        "sources": [
+          {
+            "name": "Total Revenue"
+          }
+        ]
+      },
+      {
+        "name": "Cost",
+        "format": "{<Total Cost>,0:N4}",
+        "type": "System.Double",
+        "sources": [
+          {
+            "name": "Total Cost"
           }
         ]
       },

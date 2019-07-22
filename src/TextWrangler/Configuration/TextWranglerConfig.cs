@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using TextWrangler.Extensions;
@@ -15,11 +16,16 @@ namespace TextWrangler.Configuration
     public static class TextWranglerConfig
     {
         private static readonly ILogger _log = LogManager.GetLogger("TextWranglerConfig");
+        private static string _textWranglerConfigFile;
 
         /// <summary>
         /// Full absolute or relative path to the config file to use for record type configuration
         /// </summary>
-        public static string TextWranglerConfigFile { get; set; } = "textwrangler.json";
+        public static string TextWranglerConfigFile
+        {
+            get => _textWranglerConfigFile ?? (_textWranglerConfigFile = Path.GetFullPath("textwrangler.json"));
+            set => _textWranglerConfigFile = Path.GetFullPath(value);
+        }
 
         /// <summary>
         /// Sets the default logging level for logging events/information
@@ -89,6 +95,9 @@ namespace TextWrangler.Configuration
                   },
                   {
                       typeof(long), s => Convert.ToInt64(s)
+                  },
+                  {
+                      typeof(DateTime), s => Convert.ToDateTime(s)
                   }
               };
 

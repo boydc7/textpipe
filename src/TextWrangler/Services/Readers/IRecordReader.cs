@@ -7,5 +7,6 @@ namespace TextWrangler.Services.Readers
     {
         IEnumerable<IReadOnlyDictionary<string, string>> GetRecords(int limit = int.MaxValue);
         int CountRead { get; }
+        int CountFail { get; }
     }
 }

@@ -34,7 +34,7 @@ namespace TextWrangler.Services.Filters
                 {
                     try
                     {
-                        targetField.TypedValue = targetField.Value.ConvertToType(Type.GetType(targetField.Type));
+                        targetField.TypedValue = targetField.Value.ConvertToType(targetField.Type.GetSystemType());
                     }
                     catch(Exception x) when(TextWranglerConfig.OnException(x, $"Could not convert target record [{recordNumber}] field [{targetField.Name}] to type specified [{targetField.Type}] - field value [{targetField.Value.Left(250)}]"))
                     {
