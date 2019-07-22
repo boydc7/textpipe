@@ -1,0 +1,151 @@
+{
+  "recordSample": {
+    "fields": [
+      {
+        "name": "OrderID",
+        "format": "<Order Number>",
+        "type": "System.Int64",
+        "sources": [
+          {
+            "name": "Order Number",
+            "filters": [ "trim" ]
+          }
+        ]
+      },
+      {
+        "name": "OrderDate",
+        "format": "<Year>-<Month>-<Day>",
+        "type": "System.DateTime",
+        "sources": [
+          {
+            "name": "Year",
+            "filters": [ "trim" ]
+          },
+          {
+            "name": "Month",
+            "filters": [ "trim" ]
+          },
+          {
+            "name": "Day",
+            "filters": [ "trim" ]
+          }
+        ]
+      },
+      {
+        "name": "ProductId",
+        "format": "<Product Number>",
+        "sources": [
+          {
+            "name": "Product Number",
+            "filters": [ "trim", "upper" ]
+          }
+        ]
+      },
+      {
+        "name": "ProductName",
+        "format": "<Product Name>",
+        "sources": [
+          {
+            "name": "Product Name",
+            "filters": [ "trim", "titlecase" ]
+          }
+        ]
+      },
+      {
+        "name": "Quantity",
+        "format": "<Count>",
+        "type": "System.Double",
+        "sources": [
+          {
+            "name": "Count",
+            "filters": [ "trim" ]
+          }
+        ]
+      },
+      {
+        "name": "Unit",
+        "format": "kg"
+      }
+    ]
+  },
+  "salesSample": {
+    "fields": [
+      {
+        "name": "Country",
+        "format": "<Country>",
+        "sources": [
+          {
+            "name": "Country",
+            "filters": [
+              "trim",
+              "titlecase"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "ItemType",
+        "format": "<Item Type>",
+        "sources": [
+          {
+            "name": "Item Type",
+            "filters": [
+              "trim",
+              "titlecase"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "OrderDate",
+        "format": "<Order Date>",
+        "type": "System.DateTime",
+        "sources": [
+          {
+            "name": "Order Date"
+          }
+        ]
+      },
+      {
+        "name": "OrderId",
+        "format": "<Order ID>",
+        "type": "System.Int64",
+        "sources": [
+          {
+            "name": "Order ID"
+          }
+        ]
+      },
+      {
+        "name": "Units",
+        "format": "<Units Sold>",
+        "type": "System.Int64",
+        "sources": [
+          {
+            "name": "Units Sold"
+          }
+        ]
+      },
+      {
+        "name": "UnitPrice",
+        "format": "{<Unit Price>,0:N4}",
+        "type": "System.Double",
+        "sources": [
+          {
+            "name": "Unit Price"
+          }
+        ]
+      },
+      {
+        "name": "Profit",
+        "format": "{<Total Profit>,0:N4}",
+        "type": "System.Double",
+        "sources": [
+          {
+            "name": "Total Profit"
+          }
+        ]
+      }
+    ]
+  }
+}

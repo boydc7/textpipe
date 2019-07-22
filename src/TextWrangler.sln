@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextWrangler", "TextWrangler\TextWrangler.csproj", "{35582A0A-64EF-45CA-B1B2-53A42B3F7631}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextWrangler.UnitTests", "..\tests\TextWrangler.UnitTests\TextWrangler.UnitTests.csproj", "{8131C31C-738F-4B27-B7AC-B94FCB8EBF33}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{98159DFD-FDCB-4C94-9741-C6DEB57CEB9A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hosts", "Hosts", "{FF2736EB-7A6E-46D7-9980-00A59CB7A36C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextWrangler.IntegrationTests", "..\tests\TextWrangler.IntegrationTests\TextWrangler.IntegrationTests.csproj", "{6289D355-7779-4353-8C17-8A3616678C4E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextWrangler.Console", "TextWrangler.Console\TextWrangler.Console.csproj", "{4ED21333-124A-43AB-832E-7EC2B6ABFFC5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{35582A0A-64EF-45CA-B1B2-53A42B3F7631}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35582A0A-64EF-45CA-B1B2-53A42B3F7631}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35582A0A-64EF-45CA-B1B2-53A42B3F7631}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35582A0A-64EF-45CA-B1B2-53A42B3F7631}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8131C31C-738F-4B27-B7AC-B94FCB8EBF33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8131C31C-738F-4B27-B7AC-B94FCB8EBF33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8131C31C-738F-4B27-B7AC-B94FCB8EBF33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8131C31C-738F-4B27-B7AC-B94FCB8EBF33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6289D355-7779-4353-8C17-8A3616678C4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6289D355-7779-4353-8C17-8A3616678C4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6289D355-7779-4353-8C17-8A3616678C4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6289D355-7779-4353-8C17-8A3616678C4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4ED21333-124A-43AB-832E-7EC2B6ABFFC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4ED21333-124A-43AB-832E-7EC2B6ABFFC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4ED21333-124A-43AB-832E-7EC2B6ABFFC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4ED21333-124A-43AB-832E-7EC2B6ABFFC5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8131C31C-738F-4B27-B7AC-B94FCB8EBF33} = {98159DFD-FDCB-4C94-9741-C6DEB57CEB9A}
+		{6289D355-7779-4353-8C17-8A3616678C4E} = {98159DFD-FDCB-4C94-9741-C6DEB57CEB9A}
+		{4ED21333-124A-43AB-832E-7EC2B6ABFFC5} = {FF2736EB-7A6E-46D7-9980-00A59CB7A36C}
+	EndGlobalSection
+EndGlobal

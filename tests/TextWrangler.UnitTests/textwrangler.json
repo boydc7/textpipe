@@ -1,0 +1,71 @@
+{
+  "recordSample": {
+    "fields": [
+      {
+        "name": "OrderID",
+        "format": "<Order Number>",
+        "type": "System.Int64",
+        "sources": [
+          {
+            "name": "Order Number",
+            "filters": [ "trim" ]
+          }
+        ]
+      },
+      {
+        "name": "OrderDate",
+        "format": "<Year>-<Month>-<Day>",
+        "type": "System.DateTime",
+        "sources": [
+          {
+            "name": "Year",
+            "filters": [ "trim" ]
+          },
+          {
+            "name": "Month",
+            "filters": [ "trim" ]
+          },
+          {
+            "name": "Day",
+            "filters": [ "trim" ]
+          }
+        ]
+      },
+      {
+        "name": "ProductId",
+        "format": "<Product Number>",
+        "sources": [
+          {
+            "name": "Product Number",
+            "filters": [ "trim", "upper" ]
+          }
+        ]
+      },
+      {
+        "name": "ProductName",
+        "format": "<Product Name>",
+        "sources": [
+          {
+            "name": "Product Name",
+            "filters": [ "trim", "titlecase" ]
+          }
+        ]
+      },
+      {
+        "name": "Quantity",
+        "format": "<Count>",
+        "type": "System.Double",
+        "sources": [
+          {
+            "name": "Count",
+            "filters": [ "trim" ]
+          }
+        ]
+      },
+      {
+        "name": "Unit",
+        "format": "kg"
+      }
+    ]
+  }
+}
