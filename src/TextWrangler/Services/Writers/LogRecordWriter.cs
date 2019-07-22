@@ -57,5 +57,7 @@ namespace TextWrangler.Services.Writers
                 recordNumber++;
             }
         }
+
+        public void Dispose() { }
     }
 }

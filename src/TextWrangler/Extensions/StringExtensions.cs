@@ -41,5 +41,10 @@ namespace TextWrangler.Extensions
                        ? i
                        : defaultValue;
         }
+
+        public static int Gz(this int value, int valueIfNegativeOrZero)
+            => value > 0
+                   ? value
+                   : valueIfNegativeOrZero;
     }
 }

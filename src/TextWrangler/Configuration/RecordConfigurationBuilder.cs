@@ -6,7 +6,7 @@ using TextWrangler.Models;
 namespace TextWrangler.Configuration
 {
     /// <summary>
-    /// Used to build a POCO <see cref="RecordConfiguration" /> object that models a target <see cref="RecordType" /> record in the given
+    /// Used to build a POCO <see cref="RecordConfiguration" /> object that models a target <see cref="TargetRecord" /> record in the given
     /// TextWrangler configuration file.
     /// </summary>
     public class RecordConfigurationBuilder

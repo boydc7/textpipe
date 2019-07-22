@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
+using TextWrangler.Configuration;
 using TextWrangler.Services;
 using TextWrangler.Services.Readers;
 
@@ -57,7 +58,7 @@ namespace TextWrangler.UnitTests
 
             List<IReadOnlyDictionary<string, string>> records;
 
-            var csvConfig = CsvRecordReader.GetDefaultConfiguration();
+            var csvConfig = TextWranglerConfig.DefaultCsvConfigurationFactory();
             csvConfig.HasHeaderRecord = false;
 
             using(var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(string.Join(Environment.NewLine, sampleCsv))))

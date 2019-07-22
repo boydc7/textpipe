@@ -12,5 +12,7 @@ namespace TextWrangler.Services.Writers
 
         public IEnumerable<TargetRecord> Write(IEnumerable<TargetRecord> targetRecords, RecordConfiguration recordConfiguration)
             => targetRecords;
+
+        public void Dispose() { }
     }
 }

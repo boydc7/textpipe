@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Text;
 using Microsoft.Extensions.Logging;
 using TextWrangler.Extensions;
 using TextWrangler.Models;
+using TextWrangler.Services.Builders;
 using TextWrangler.Services.Filters;
 using TextWrangler.Services.Formatters;
 using TextWrangler.Services.Writers;
@@ -41,6 +44,8 @@ namespace TextWrangler.Configuration
                                               SourceFieldIndexReplacementFormatter.Instance,
                                               StringDotFormatFormatter.Instance
                                           });
+
+        public static IRecordBuilder DefaultRecordBuilder { get; set; } = SerialRecordBuilder.Default;
 
         public static IRecordWriter DefaultRecordWriter { get; set; } = LogRecordWriter.Instance;
 
@@ -86,5 +91,42 @@ namespace TextWrangler.Configuration
                       typeof(long), s => Convert.ToInt64(s)
                   }
               };
+
+        /// <summary>
+        /// Factory that provides instances of the default configuration to be used for CSV readers/writers
+        /// </summary>
+        public static Func<CsvHelper.Configuration.Configuration> DefaultCsvConfigurationFactory =>
+            () => new CsvHelper.Configuration.Configuration
+                  {
+                      HasHeaderRecord = true,
+                      CultureInfo = CultureInfo.InvariantCulture,
+                      DetectColumnCountChanges = false,
+                      Delimiter = ",",
+                      Escape = '"',
+                      Quote = '"',
+                      AllowComments = false,
+                      Encoding = Encoding.UTF8,
+                      IgnoreBlankLines = true,
+                      BufferSize = 1024 * 10,
+                      BadDataFound = rctx =>
+                                     {
+                                         var msg = $"Could not read CSV record [{rctx.RawRow}], BadDataFound. RawRecord [{rctx.RawRecord}]";
+
+                                         if (OnException(null, msg))
+                                         {
+                                             throw new TextWranglerReaderException(msg);
+                                         }
+                                     },
+                      MissingFieldFound = (headers, recordIndex, rctx) =>
+                                          {
+                                              var msg = $"Source filed not found in CSV reader, row number  [{recordIndex}], MissingFieldFound. RawRecord [{rctx.RawRecord}]";
+
+                                              if (OnException(null, msg))
+                                              {
+                                                  throw new TextWranglerReaderException(msg);
+                                              }
+                                          },
+                      ReadingExceptionOccurred = csvx => OnException(csvx, null),
+                  };
     }
 }

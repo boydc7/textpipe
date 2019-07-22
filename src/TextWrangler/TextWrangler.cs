@@ -27,7 +27,7 @@ namespace TextWrangler
 
         public TextWrangler(string recordConfigName,
                             IRecordReader recordReader,
-                            IRecordBuilder recordBuilder,
+                            IRecordBuilder recordBuilder = null,
                             IFieldFormatter fieldFormatter = null,
                             IFieldFilterService fieldFilterService = null,
                             IRecordWriter recordWriter = null)
@@ -36,31 +36,24 @@ namespace TextWrangler
 
         public TextWrangler(RecordConfiguration recordConfiguration,
                             IRecordReader recordReader,
-                            IRecordBuilder recordBuilder,
+                            IRecordBuilder recordBuilder = null,
                             IFieldFormatter fieldFormatter = null,
                             IFieldFilterService fieldFilterService = null,
                             IRecordWriter recordWriter = null)
         {
             _recordConfiguration = recordConfiguration ?? throw new ArgumentNullException(nameof(recordReader));
             _recordReader = recordReader ?? throw new ArgumentNullException(nameof(recordReader));
-            _recordBuilder = recordBuilder ?? throw new ArgumentNullException(nameof(recordReader));
 
             // Validate the configuration
             RecordConfigurationValidator.Instance.Validate(_recordConfiguration, _fieldFilterService);
 
-            _fieldFilterService = fieldFilterService ?? TextWranglerConfig.DefaultFieldFilterService;
+            _recordBuilder = recordBuilder ?? TextWranglerConfig.DefaultRecordBuilder;
             _fieldFormatter = fieldFormatter ?? TextWranglerConfig.DefaultFieldFormatter;
+            _fieldFilterService = fieldFilterService ?? TextWranglerConfig.DefaultFieldFilterService;
             _recordWriter = recordWriter ?? TextWranglerConfig.DefaultRecordWriter;
 
             _logger = LogManager.GetLogger(GetType().Name);
         }
-
-        public static TextWrangler CreateDefault(string recordConfigName, string csvFile)
-            => new TextWrangler(recordConfigName, new CsvRecordReader(csvFile), SerialRecordBuilder.Default,
-                                recordWriter: NullRecordWriter.Instance);
-
-        public static TextWrangler CreateDefault(RecordConfiguration recordConfiguration, string csvFile)
-            => new TextWrangler(recordConfiguration, new CsvRecordReader(csvFile), SerialRecordBuilder.Default);
 
         public void Wrangle(int limit = int.MaxValue)
         {
@@ -95,6 +88,7 @@ namespace TextWrangler
             }
 
             _recordReader?.Dispose();
+            _recordWriter?.Dispose();
 
             _disposed = true;
         }

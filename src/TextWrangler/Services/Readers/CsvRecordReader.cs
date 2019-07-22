@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.Text;
 using CsvHelper;
 using TextWrangler.Configuration;
 using TextWrangler.Extensions;
-using TextWrangler.Models;
 
 namespace TextWrangler.Services.Readers
 {
@@ -24,7 +21,7 @@ namespace TextWrangler.Services.Readers
         /// <param name="sourceFile">The full path/name to the file to be read - must be accessible via the <see cref="System.IO.File.OpenRead" /> method/> </param>
         /// <param name="csvConfiguration">A <see cref="CsvHelper.Configuration" /> configuration specification for how to read the csv file</param>
         public CsvRecordReader(string sourceFile, CsvHelper.Configuration.Configuration csvConfiguration = null)
-            : this(sourceFile.ToStream(), csvConfiguration) { }
+            : this(sourceFile.ToReadStream(), csvConfiguration) { }
 
         /// <summary>
         /// Used to read a CSV-formated stream via a <see cref="System.IO.StreamReader" />
@@ -33,7 +30,7 @@ namespace TextWrangler.Services.Readers
         /// <param name="csvConfiguration">A <see cref="CsvHelper.Configuration" /> configuration specification for how to read the csv file</param>
         public CsvRecordReader(Stream stream, CsvHelper.Configuration.Configuration csvConfiguration = null)
         {
-            var csvConfig = csvConfiguration ?? GetDefaultConfiguration();
+            var csvConfig = csvConfiguration ?? TextWranglerConfig.DefaultCsvConfigurationFactory();
 
             if (stream == null || !stream.CanRead)
             {
@@ -42,7 +39,7 @@ namespace TextWrangler.Services.Readers
 
             // Keep a local ref to the stream reader so we can properly dispose of it on failure in creating the csv reader
             _streamReader = new StreamReader(stream);
-            _csvReader = new CsvReader(new StreamReader(stream), csvConfig);
+            _csvReader = new CsvReader(_streamReader, csvConfig);
 
             if (csvConfig.HasHeaderRecord)
             {
@@ -52,39 +49,6 @@ namespace TextWrangler.Services.Readers
                 _header = _csvReader.Context.HeaderRecord;
             }
         }
-
-        public static CsvHelper.Configuration.Configuration GetDefaultConfiguration() => new CsvHelper.Configuration.Configuration
-                                                                                         {
-                                                                                             HasHeaderRecord = true,
-                                                                                             CultureInfo = CultureInfo.InvariantCulture,
-                                                                                             DetectColumnCountChanges = false,
-                                                                                             Delimiter = ",",
-                                                                                             Escape = '"',
-                                                                                             Quote = '"',
-                                                                                             AllowComments = false,
-                                                                                             Encoding = Encoding.UTF8,
-                                                                                             IgnoreBlankLines = true,
-                                                                                             BufferSize = 1024 * 10,
-                                                                                             BadDataFound = rctx =>
-                                                                                                            {
-                                                                                                                var msg = $"Could not read CSV record [{rctx.RawRow}], BadDataFound. RawRecord [{rctx.RawRecord}]";
-
-                                                                                                                if (TextWranglerConfig.OnException(null, msg))
-                                                                                                                {
-                                                                                                                    throw new TextWranglerReaderException(msg);
-                                                                                                                }
-                                                                                                            },
-                                                                                             MissingFieldFound = (headers, recordIndex, rctx) =>
-                                                                                                                 {
-                                                                                                                     var msg = $"Source filed not found in CSV reader, row number  [{recordIndex}], MissingFieldFound. RawRecord [{rctx.RawRecord}]";
-
-                                                                                                                     if (TextWranglerConfig.OnException(null, msg))
-                                                                                                                     {
-                                                                                                                         throw new TextWranglerReaderException(msg);
-                                                                                                                     }
-                                                                                                                 },
-                                                                                             ReadingExceptionOccurred = csvx => TextWranglerConfig.OnException(csvx, null),
-                                                                                         };
 
         /// <inheritdoc/>
         public void Dispose()
@@ -112,7 +76,7 @@ namespace TextWrangler.Services.Readers
         public IEnumerable<IReadOnlyDictionary<string, string>> GetRecords(int limit = int.MaxValue)
         {
             while (true)
-            {   // CountRead is the index of the record being read on this iteration...
+            { // CountRead is the index of the record being read on this iteration...
                 CountRead++;
 
                 var recordMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
