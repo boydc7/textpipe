@@ -99,6 +99,7 @@ See the [config file ref](#config-file-reference) section for an overview of the
   * Throw an exception when things don't match
   * Replace "invalid" characters with some replacement
   * Extend the allowance regex
+
 I took the last approach by default (i.e. allow basically any character) since the record type is string. To change this however to work in either of the other 2 approaches would be simple (either updating the config definition, or adding a new IFieldFilter implementation.
 
 * The takehom doc didn't specify anything related to outputing the final correct target data (it did mention to log failed records).  I assumed we'd want a way to output it to one or more places naturally - by default it's just logged, but there's a CSV output writer included as well.
