@@ -59,11 +59,6 @@ namespace TextWrangler
         {
             var stopWatch = Stopwatch.StartNew();
 
-            // TODO: Document...
-            // How to run
-            // Assumptions:
-            // ProductNumber pseudo reg-ex implies alphanumeric, but CSV says otherwise...I'm assuming the ProductNumber can support non-alphanumeric characters - but to change that use a filter that validates or stips them
-
             _logger.LogInformation($"Starting Wrangling for recordType [{_recordConfiguration.RecordTypeName}]");
 
             // Simple lazy pipeline
