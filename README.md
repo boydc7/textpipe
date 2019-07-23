@@ -53,7 +53,7 @@ Responsible for reading source records and producing a map of labeled source val
 
 #### IRecordBuilder
 
-Responsible for turning IRecordReader source maps into initial representations of target record models including optionally filtering the source values with the injected IFieldFilterService (if the source configuration for a given field includes filters to be applied to the source value - see [config file ref](#config-ref) ).  A single concrete implementation is included:
+Responsible for turning IRecordReader source maps into initial representations of target record models including optionally filtering the source values with the injected IFieldFilterService (if the source configuration for a given field includes filters to be applied to the source value - see [config file ref](#config-file-reference) ).  A single concrete implementation is included:
 
 * [SerialRecordBuilder](src/TextWrangler/Builders/SerialRecordBuilder.cs) (builds targets serially as outlined above)
 
@@ -62,7 +62,7 @@ Responsible for turning IRecordReader source maps into initial representations o
 Responsible for manipulating target field values in some specific way to format output, prepare the value for other formatters to work, etc. Included concrete implementations are:
 
 * [SourceFieldIndexReplacementFormatter](src/TextWrangler/Formatters/SourceFieldIndexReplacementFormatter.cs) (Replaces named source fields in the target field value with either the actual value of the source field OR the indexed location (if the source field is used as part of a [format string](https://docs.microsoft.com/en-us/dotnet/api/system.string.format)))
-* [StringDotFormatFormatter](src/TextWrangler/Formatters/StringDotFormatFormatter.cs) (Runs a target field value through a [string.format](https://docs.microsoft.com/en-us/dotnet/api/system.string.format) operation using the field's sources list (see [config file ref](#config-ref)) as indexed inputs)
+* [StringDotFormatFormatter](src/TextWrangler/Formatters/StringDotFormatFormatter.cs) (Runs a target field value through a [string.format](https://docs.microsoft.com/en-us/dotnet/api/system.string.format) operation using the field's sources list (see [config file ref](#config-file-reference)) as indexed inputs)
 
 
 ## [Documentation overview](#docoverview)
@@ -71,7 +71,7 @@ Responsible for manipulating target field values in some specific way to format 
 
 ## [Up next](#upnext)
 
-## [Config File Reference](#config-ref)
+## [Config File Reference](#config-file-reference)
 
 The TextWrangler config file is a JSON formatted file responsible for defining one or more target record types that map one or more source fields to one or more target fields within the record.  
 
