@@ -1,6 +1,6 @@
 # TextWrangler
 
-## [Build and Run](#buildrun)
+## [Build, Test, Run](#buildtestrun)
 
 * Download and install dotnet core (this is the 2.2.301 direct link)
   * Mac: <https://download.visualstudio.microsoft.com/download/pr/1440e4a9-4e5f-4148-b8d2-8a2b3da4e622/d0c5cb2712e51c188200ea420d771c2f/dotnet-sdk-2.2.301-osx-x64.pkg>
@@ -13,7 +13,13 @@ git clone https://github.com/boydc7/textwrangler
 cd textwrangler
 dotnet publish -c Release -o ../../publish src/TextWrangler.Console/TextWrangler.Console.csproj
 ```
+* Run test suites (from textwrangler folder from above)
+```bash
+dotnet test tests/TextWrangler.UnitTests/TextWrangler.UnitTests.csproj
+dotnet test tests/TextWrangler.IntegrationTests/TextWrangler.IntegrationTests.csproj
+```
 * Run (from textwrangler folder from above)
+> NOTE: The sample.csv file is a copy of the sample Gist provided from the takehome doc. The recordSample recordType in the textwrangler.json config file can be used to map from any file with data similar to that to the target model record requested in the takehome doc.
 ```bash
 # Show usage:
 dotnet publish/wrangle.dll
@@ -30,7 +36,42 @@ dotnet publish/wrangle.dll recordSample publish/sample.csv publish/textwrangler.
 dotnet publish/wrangle.dll salesSample "publish/1500000 Sales Records.csv" publish/textwrangler.json 0 publish/large_sales_out.csv
 ```
 
-## [Config File Reference](#configref)
+## [Short Architectural Overview](#archoverview)
+
+This is basically a simple 5-component ETL pipeline. Each of the 5 component dependencies can be injected to the default ITextWrangler implementation to adjust the runtime behaviour. The general flow of the data through the pipeline is as follows:
+
+IRecordReader -> IRecordBuilder -> IRecordFormatter -> IRecordFilterService -> IRecordWriter
+
+The actual pipeline is a simple laziliy produced enumerable of entities that flow from one component to the next, which then processes each entity in turn and produces it as output as well.
+
+#### IRecordReader
+
+Responsible for reading source records and producing a map of labeled source values (labeled by field name or index depending on the abilities of the source). A CSV source for example could have a header which would allow for labeling the data by "field name", or it may not (or may have header values for only some fields in the CSV) in which case it may label the data by field index. Included concrete implementations are:
+
+* [CsvRecordReader](src/TextWrangler/Readers/CsvRecordReader.cs) (reads from a source CSV file or stream)
+* [ProgressLoggedRecordReader](src/TextWrangler/Readers/ProgressLoggedRecordReader.cs) (not an actual source reader, but instead decorates another reader by logging progress of a read)
+
+#### IRecordBuilder
+
+Responsible for turning IRecordReader source maps into initial representations of target record models including optionally filtering the source values with the injected IFieldFilterService (if the source configuration for a given field includes filters to be applied to the source value - see [config file ref](#config-ref) ).  A single concrete implementation is included:
+
+* [SerialRecordBuilder](src/TextWrangler/Builders/SerialRecordBuilder.cs) (builds targets serially as outlined above)
+
+#### IRecordFormatter
+
+Responsible for manipulating target field values in some specific way to format output, prepare the value for other formatters to work, etc. Included concrete implementations are:
+
+* [SourceFieldIndexReplacementFormatter](src/TextWrangler/Formatters/SourceFieldIndexReplacementFormatter.cs) (Replaces named source fields in the target field value with either the actual value of the source field OR the indexed location (if the source field is used as part of a [format string](https://docs.microsoft.com/en-us/dotnet/api/system.string.format)))
+* [StringDotFormatFormatter](src/TextWrangler/Formatters/StringDotFormatFormatter.cs) (Runs a target field value through a [string.format](https://docs.microsoft.com/en-us/dotnet/api/system.string.format) operation using the field's sources list (see [config file ref](#config-ref)) as indexed inputs)
+
+
+## [Documentation overview](#docoverview)
+
+## [Assumptions](#assumptions)
+
+## [Up next](#upnext)
+
+## [Config File Reference](#config-ref)
 
 The TextWrangler config file is a JSON formatted file responsible for defining one or more target record types that map one or more source fields to one or more target fields within the record.  
 
