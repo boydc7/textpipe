@@ -110,6 +110,7 @@ I took the last approach by default (i.e. allow basically any character) since t
 * From a usability perspective I'd consider removing the current requirement of having the source fields for use on each given target field from being required in the sources list in the config. You'd still have to include it if you want filter it in some way (as you'd have to indicate the filter(s) to run it through), but you shouldn't necessarily have to have it mapped there if you just want to grab it's raw value and use it.
 * Currently for any type of logging/output stream (i.e. error records, log data, etc.) you do not have context from different stages in the pipeline to include with output (for example, if a filter throws an exception, it does not currently have context of what the source values were, which record it is, etc.  Would be pretty simple to provide some thread/async local storage through the pipeline to give that context, which would allow for much "better" stream output
 * From an operational perspective I'd look at adding likely significant logging/profiling options to allow for easier troubleshooting, tracking, etc. 
+* I'd certainly consider extending the integration testing footprint specifically, unit testing is fairly well covered, but could also likely be extended a bit
 
 ## [Config File Reference](#config-file-reference)
 
