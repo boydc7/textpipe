@@ -8,7 +8,7 @@ A simple sample config file that represents most (all?) of the functionality is 
 
 ```json
 {
-    "orderRecord": {                              // A mapping of an OrderRecord 
+    "orderRecord": {                              -- A mapping of an OrderRecord 
       "fields": [                                       // One or more fields that make up the order
         {
             "name": "OrderId",                  // Target field named OrderId (Target fields are outputs)  
