@@ -12,47 +12,49 @@ A simple sample config file that represents most (all?) of the functionality is 
       "fields": [                       // One or more fields that make up the order
         {
             "name": "OrderId",          // Target field named OrderId (Target fields are outputs)  
-            "format": "<Order Num>",    // The source field(s) and format specifier used to create and format the 
+            "format": "<Order Num>",    // The source field(s) and format specifier used to create and
+                                        // format the target field
+            "type": "System.Int64",     // An optional type that the final target field value MUST 
+                                        // convert into successfully
+            "sources": [                // Zero or more source field(s) that are used to build this 
                                         // target field
-            "type": "System.Int64",     // An optional type that the final target field value MUST convert into successfully
-            "sources": [                // Zero or more source field(s) that are used to build this target field
               {         
-                "name": "Order Num",    // The name of the source field. To reference a source field by name, 
-                                        // it must come from a file format that supports named fields, i.e. a CSV file 
-                                        // with valid headers, JSON, etc.
-                "filters": [            // One or more filters to apply to the source field before using.
-                  "trim",               // These modify the source value in some way, and do not fail/throw exceptions
-                  "upper",              // based on the contents of the field - a value is simply trimmed, 
-                                        // or upper-cased (if upper-caseable)
-                  "titlecase"           // or title-cased...
+                "name": "Order Num",    // The name of the source field. To reference a source field 
+                                        // by name, it must come from a file format that supports 
+                                        // named fields, i.e. a CSV file with valid headers, JSON,...
+                "filters": [            // One or more filters to apply to the source field before using
+                  "trim",               // These modify the source value in some way, and do not 
+                  "upper",              // fail/throw exceptions based on the contents of the field
+                                        // a value is simply trimmed, or upper-cased (if upper-
+                  "titlecase"           // caseable) or title-cased...
                 ]
               }
             ]
           },
           {
             "name": "OrderAmount",      // 2nd target field named OrderAmount
-            "format": "{<Amt>,0:N4}",   // Formats can include any viable .NET format string (this one will format the source
-                                        // field Amt value from a double into a number with culture-specific thousands 
-                                        // separators and 4 decimal places (rounded)
+            "format": "{<Amt>,0:N4}",   // Formats can include any viable .NET format string (this
+                                        // one will format the source field Amt value from a double 
+                                        // into a number with culture-specific thousands separators
+                                        // and 4 decimal places (rounded)
             "sources": [
               {
                 "name": "Amt",          // The source field 
-                "type": "System.Double"  // If the source field is used in a format string, the type is 
-                                        // required to make it work contextually correctly
-              }
+                "type": "System.Double"  // If the source field is used in a format string, the 
+              }                         // type is required to make it work contextually correctly
             ]
           },
           {
             "name": "OrderDate",        // The 3rd target field named OrderDate
             "format": "{<Year>:2000}-{<Month>:00}-{<Day>:00}T00:00:00Z",  
                       // Above is an ISO 8601 format date with zulu tz build from 3 source fields
-                      // The Year will be a 4-digit year (if 2 digits it will be 20xx), month and day will 
-                      // be 2 digit days padded with a 0 on teh left
+                      // The Year will be a 4-digit year (if 2 digits it will be 20xx), month and
+                      // day will be 2 digit days padded with a 0 on teh left
             "sources": [
-              {                          // Single target field in this case is made of 3 different source fields
+              {                          // Single target made of 3 different source fields
                 "name": "Year",
-                "type": "System.Int32"   // Each with a type specified to work contextually in the format string
-              },
+                "type": "System.Int32"   // Each with a type specified to work contextually in 
+              },                         // the format string
               {
                 "name": "Month",
                 "type": "System.Int32"
