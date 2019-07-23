@@ -58,22 +58,22 @@ The actual pipeline is a simple laziliy produced enumerable of entities that flo
 
 Responsible for reading source records and producing a map of labeled source values (labeled by field name or index depending on the abilities of the source). A CSV source for example could have a header which would allow for labeling the data by "field name", or it may not (or may have header values for only some fields in the CSV) in which case it may label the data by field index. Included concrete implementations are:
 
-* [CsvRecordReader](src/TextWrangler/Readers/CsvRecordReader.cs) (reads from a source CSV file or stream)
-* [ProgressLoggedRecordReader](src/TextWrangler/Readers/ProgressLoggedRecordReader.cs) (not an actual source reader, but instead decorates another reader by logging progress of a read)
+* [CsvRecordReader](src/TextWrangler/Services/Readers/CsvRecordReader.cs) (reads from a source CSV file or stream)
+* [ProgressLoggedRecordReader](src/TextWrangler/Services/Readers/ProgressLoggedRecordReader.cs) (not an actual source reader, but instead decorates another reader by logging progress of a read)
 
 #### IRecordBuilder
 
 Responsible for turning IRecordReader source maps into initial representations of target record models including optionally filtering the source values with the injected IFieldFilterService (if the source configuration for a given field includes filters to be applied to the source value - see [config file ref](#config-file-reference)).  A single concrete implementation is included:
 
-* [SerialRecordBuilder](src/TextWrangler/Builders/SerialRecordBuilder.cs) (builds targets serially as outlined above)
+* [SerialRecordBuilder](src/TextWrangler/Services/Builders/SerialRecordBuilder.cs) (builds targets serially as outlined above)
 
 #### IRecordFormatter
 
 Responsible for manipulating target field values in some specific way to format output, prepare the value for other formatters to work, etc. Included concrete implementations are:
 
-* [SourceFieldIndexReplacementFormatter](src/TextWrangler/Formatters/SourceFieldIndexReplacementFormatter.cs) (Replaces named source fields in the target field value with either the actual value of the source field OR the indexed location (if the source field is used as part of a [format string](https://docs.microsoft.com/en-us/dotnet/api/system.string.format)))
-* [StringDotFormatFormatter](src/TextWrangler/Formatters/StringDotFormatFormatter.cs) (Runs a target field value through a [string.format](https://docs.microsoft.com/en-us/dotnet/api/system.string.format) operation using the field's sources list (see [config file ref](#config-file-reference)) as indexed inputs)
-* [CompositeFieldFormatter](src/TextWrangler/Formatters/CompositeFieldFormatter.cs) (Just a composite pattern implementation over the IFieldFormatter interface - runs multiple concrete IFieldFormatter's)
+* [SourceFieldIndexReplacementFormatter](src/TextWrangler/Services/Formatters/SourceFieldIndexReplacementFormatter.cs) (Replaces named source fields in the target field value with either the actual value of the source field OR the indexed location (if the source field is used as part of a [format string](https://docs.microsoft.com/en-us/dotnet/api/system.string.format)))
+* [StringDotFormatFormatter](src/TextWrangler/Services/Formatters/StringDotFormatFormatter.cs) (Runs a target field value through a [string.format](https://docs.microsoft.com/en-us/dotnet/api/system.string.format) operation using the field's sources list (see [config file ref](#config-file-reference)) as indexed inputs)
+* [CompositeFieldFormatter](src/TextWrangler/Services/Formatters/CompositeFieldFormatter.cs) (Just a composite pattern implementation over the IFieldFormatter interface - runs multiple concrete IFieldFormatter's)
 
 #### IRecordFilterService
 
@@ -83,9 +83,9 @@ Responsible for passing target values through zero or more filters (that are map
 
 Responsible for writing final target records to something. Included concrete implementations include:
 
-* [LogRecordWriter](src/TextWrangler/Writers/LogRecordWriter.cs) (writes target records to the configured [ILogger](https://docs.microsoft.com/en-us/dotnet/api/microsoft.extensions.logging.ilogger?view=aspnetcore-2.2) for the LogRecordWriter type)
-* [CsvRecordWriter](src/TextWrangler/Writers/CsvRecordWriter.cs) (writes target records to a given CSV file/stream)
-* [NullRecordWriter](src/TextWrangler/Writers/NullRecordWriter.cs) (writes target records nowhere, i.e. ignores them)
+* [LogRecordWriter](src/TextWrangler/Services/Writers/LogRecordWriter.cs) (writes target records to the configured [ILogger](https://docs.microsoft.com/en-us/dotnet/api/microsoft.extensions.logging.ilogger?view=aspnetcore-2.2) for the LogRecordWriter type)
+* [CsvRecordWriter](src/TextWrangler/Services/Writers/CsvRecordWriter.cs) (writes target records to a given CSV file/stream)
+* [NullRecordWriter](src/TextWrangler/Services/Writers/NullRecordWriter.cs) (writes target records nowhere, i.e. ignores them)
 
 ## [Documentation overview](#documentation-overview)
 
