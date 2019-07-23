@@ -29,20 +29,27 @@ namespace TextWrangler.Services.Filters
 
             foreach (var targetRecord in _innerFieldFilterService.Filter(targetRecords, recordConfiguration))
             {
-                foreach (var targetField in targetRecord.Fields
-                                                        .Where(f => !f.Type.IsNullOrEmpty()))
+                var recordFiltered = false;
+
+                try
                 {
-                    try
+                    foreach (var targetField in targetRecord.Fields
+                                                            .Where(f => !f.Type.IsNullOrEmpty()))
                     {
                         targetField.TypedValue = targetField.Value.ConvertToType(targetField.Type.GetSystemType());
                     }
-                    catch(Exception x) when(TextWranglerConfig.OnException(x, $"Could not convert target record [{recordNumber}] field [{targetField.Name}] to type specified [{targetField.Type}] - field value [{targetField.Value.Left(250)}]"))
-                    {
-                        throw;
-                    }
+
+                    recordFiltered = true;
+                }
+                catch(Exception x) when(!TextWranglerConfig.OnException(x, $"Could not convert target record [{recordNumber}] fields to types specified"))
+                {
+                    // OnException handler says not to rethrow, so keep on going, skipping this record
                 }
 
-                yield return targetRecord;
+                if (recordFiltered)
+                {
+                    yield return targetRecord;
+                }
 
                 recordNumber++;
             }

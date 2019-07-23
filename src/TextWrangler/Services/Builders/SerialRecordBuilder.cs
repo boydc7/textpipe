@@ -59,9 +59,9 @@ namespace TextWrangler.Services.Builders
                                                                                          Type = fc.Type
                                                                                      }));
                 }
-                catch(Exception x) when(TextWranglerConfig.OnException(x, $"Could not build target record from source record [{recordNumber}] - source record values [{string.Join("|", sourceRecord.Values).Left(250)}]"))
+                catch(Exception x) when(!TextWranglerConfig.OnException(x, $"Could not build target record from source record [{recordNumber}] - source record values [{string.Join("|", sourceRecord.Values).Left(250)}]"))
                 {
-                    throw;
+                    // OnException handler says not to rethrow, so keep on going, skipping this record
                 }
 
                 if (targetRecord != null)

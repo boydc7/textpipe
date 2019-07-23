@@ -85,7 +85,7 @@ namespace TextWrangler.Services.Writers
                 }
                 catch(Exception x) when(!TextWranglerConfig.OnException(x, "Could not write CSV header record"))
                 {
-                    throw;
+                    // OnException handler says not to rethrow, so keep on going, skipping this record
                 }
             }
 
@@ -111,7 +111,7 @@ namespace TextWrangler.Services.Writers
                 }
                 catch(Exception x) when(!TextWranglerConfig.OnException(x, "Could not write CSV header record"))
                 {
-                    throw;
+                    // OnException handler says not to rethrow, so keep on going, skipping this record
                 }
 
                 if (recordWritten)

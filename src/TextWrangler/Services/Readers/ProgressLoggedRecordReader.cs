@@ -45,7 +45,7 @@ namespace TextWrangler.Services.Readers
 
             timer.Stop();
 
-            _logger.LogInformation($"Read [{_innerRecordReader.CountRead,0:N0}] total records from source, [{_innerRecordReader.CountFail,0:N0}] total failed reads, in [{timer.Elapsed:mm\\:ss}]");
+            _logger.LogInformation($"Read [{_innerRecordReader.CountRead - 1,0:N0}] total records from source, [{_innerRecordReader.CountFail,0:N0}] total failed reads, in [{timer.Elapsed:mm\\:ss}]");
         }
     }
 }

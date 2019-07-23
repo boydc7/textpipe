@@ -16,4 +16,16 @@
       <ProjectReference Include="..\..\src\TextWrangler\TextWrangler.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <None Update="textwrangler.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="sample.csv">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="smallSales.csv">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
 </Project>

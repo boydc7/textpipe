@@ -76,9 +76,7 @@ namespace TextWrangler.Services.Readers
         public IEnumerable<IReadOnlyDictionary<string, string>> GetRecords(int limit = int.MaxValue)
         {
             while (true)
-            { // CountRead is the index of the record being read on this iteration...
-                CountRead++;
-
+            {
                 var recordMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
                 var recordMapComplete = false;
 
@@ -108,8 +106,10 @@ namespace TextWrangler.Services.Readers
                 }
                 catch(Exception x) when(!TextWranglerConfig.OnException(x, $"Could not read CSV record [{CountRead}]"))
                 {
-                    throw;
+                    // OnException handler says not to rethrow, so keep on going, skipping this record
                 }
+
+                CountRead++;
 
                 if (recordMapComplete)
                 {

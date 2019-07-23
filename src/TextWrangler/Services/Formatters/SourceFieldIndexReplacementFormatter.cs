@@ -76,7 +76,7 @@ namespace TextWrangler.Services.Formatters
                 }
                 catch(Exception x) when(!TextWranglerConfig.OnException(x, $"Could not format target record in [{GetType().Name}] from built record [{recordNumber}]"))
                 {
-                    throw;
+                    // OnException handler says not to rethrow, so keep on going, skipping this record
                 }
 
                 if (targetRecordFormatted)

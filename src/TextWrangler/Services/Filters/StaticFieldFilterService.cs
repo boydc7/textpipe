@@ -62,7 +62,7 @@ namespace TextWrangler.Services.Filters
                 }
                 catch(Exception x) when(!TextWranglerConfig.OnException(x, $"Could not filter target record from formatted record [{recordNumber}]"))
                 {
-                    throw;
+                    // OnException handler says not to rethrow, so keep on going, skipping this record
                 }
 
                 if (recordFiltered)

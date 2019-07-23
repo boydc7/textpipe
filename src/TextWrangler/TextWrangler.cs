@@ -77,7 +77,7 @@ namespace TextWrangler
 
             stopWatch.Stop();
 
-            _logger.LogInformation($"Finished Wrangling of [{countProcessed}] target records in [{stopWatch.Elapsed:mm\\:ss}]");
+            _logger.LogInformation($"Finished Wrangling, [{countProcessed}] target records successfully written, [{_recordReader.CountRead}] source reacords read, in [{stopWatch.Elapsed:mm\\:ss}]");
         }
 
         public void Dispose()
