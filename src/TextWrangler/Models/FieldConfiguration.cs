@@ -23,7 +23,7 @@ namespace TextWrangler.Models
         ///
         /// Static text can simply be included/typed directly into the config
         ///
-        /// Source field references must be delimitted by opening and closing angle brackets, and the source field referenced must exist in the <see cref="FieldConfiguration.Sources"> list.
+        /// Source field references must be delimitted by opening and closing angle brackets, and the source field referenced must exist in the <see cref="FieldConfiguration.Sources" /> list.
         ///
         /// </summary>
         public string Format { get; set; }

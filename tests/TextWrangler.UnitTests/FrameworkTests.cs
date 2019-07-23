@@ -11,8 +11,8 @@ namespace TextWrangler.UnitTests
         [Test]
         public void VariousSampleFormatStringsWorkAsExpected()
         {
-            var x = string.Format("{0:2000}", 11);
-            Assert.AreEqual("11", x);
+            var intPad = string.Format("{0:2000}", 11);
+            Assert.AreEqual("2011", intPad);
 
             const double rawValue = 123_456_789.987654321;
 
