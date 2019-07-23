@@ -1,6 +1,6 @@
 # TextWrangler
 
-## [Build, Test, Run](#buildtestrun)
+## [Build Test Run](#build-test-run)
 
 * Download and install dotnet core (this is the 2.2.301 direct link)
   * Mac: <https://download.visualstudio.microsoft.com/download/pr/1440e4a9-4e5f-4148-b8d2-8a2b3da4e622/d0c5cb2712e51c188200ea420d771c2f/dotnet-sdk-2.2.301-osx-x64.pkg>
@@ -36,9 +36,19 @@ dotnet publish/wrangle.dll recordSample publish/sample.csv publish/textwrangler.
 dotnet publish/wrangle.dll salesSample "publish/1500000 Sales Records.csv" publish/textwrangler.json 0 publish/large_sales_out.csv
 ```
 
-## [Short Architectural Overview](#archoverview)
+## [Short Architectural Overview](#short-architectural-overview)
 
-This is basically a simple 5-component ETL pipeline. Each of the 5 component dependencies can be injected to the default ITextWrangler implementation to adjust the runtime behaviour. The general flow of the data through the pipeline is as follows:
+This is basically a simple 5-component ETL pipeline. Each of the 5 component dependencies can be injected to the default ITextWrangler implementation to adjust the runtime behaviour. To create and run a simple pipeline, initialize an instance of [TextWrangler](src/TextWrangler/TextWrangler.cs) (or any concrete implementation of ITextWrangler) and pass the appropriate args, like this:
+
+```csharp
+using(var wrangler = new TextWrangler(recordConfigName,
+                                      new CsvRecordReader(fileName))
+{
+    wrangler.Wrangle(limit);
+}
+```
+
+The general flow of the data through the pipeline is as follows:
 
 IRecordReader -> IRecordBuilder -> IRecordFormatter -> IRecordFilterService -> IRecordWriter
 
@@ -53,7 +63,7 @@ Responsible for reading source records and producing a map of labeled source val
 
 #### IRecordBuilder
 
-Responsible for turning IRecordReader source maps into initial representations of target record models including optionally filtering the source values with the injected IFieldFilterService (if the source configuration for a given field includes filters to be applied to the source value - see [config file ref](#config-file-reference) ).  A single concrete implementation is included:
+Responsible for turning IRecordReader source maps into initial representations of target record models including optionally filtering the source values with the injected IFieldFilterService (if the source configuration for a given field includes filters to be applied to the source value - see [config file ref](#config-file-reference)).  A single concrete implementation is included:
 
 * [SerialRecordBuilder](src/TextWrangler/Builders/SerialRecordBuilder.cs) (builds targets serially as outlined above)
 
@@ -63,13 +73,39 @@ Responsible for manipulating target field values in some specific way to format 
 
 * [SourceFieldIndexReplacementFormatter](src/TextWrangler/Formatters/SourceFieldIndexReplacementFormatter.cs) (Replaces named source fields in the target field value with either the actual value of the source field OR the indexed location (if the source field is used as part of a [format string](https://docs.microsoft.com/en-us/dotnet/api/system.string.format)))
 * [StringDotFormatFormatter](src/TextWrangler/Formatters/StringDotFormatFormatter.cs) (Runs a target field value through a [string.format](https://docs.microsoft.com/en-us/dotnet/api/system.string.format) operation using the field's sources list (see [config file ref](#config-file-reference)) as indexed inputs)
+* [CompositeFieldFormatter](src/TextWrangler/Formatters/CompositeFieldFormatter.cs) (Just a composite pattern implementation over the IFieldFormatter interface - runs multiple concrete IFieldFormatter's)
 
+#### IRecordFilterService
 
-## [Documentation overview](#docoverview)
+Responsible for passing target values through zero or more filters (that are mapped to the target field in the config file (see [config file ref](#config-file-reference)). Some filters manipulate the data (i.e. trim, uppercase, titlecase, etc.) and some simply validate that data matches a certain restriction (and will throw an exception if not), i.e. alpha filter, alphanumeric filter, etc. The service is not a filter itself, it simply uses [IFieldFilter](src/TextWrangler/Services/Filters/IFieldFilter.cs) implementations to operate on a given field if a field requires it. To see various included [IFieldFilter](src/TextWrangler/Services/Filters/IFieldFilter.cs) implementations, see the [Filters](src/TextWrangler/Services/Filters) folder.
+
+#### IRecordWriter
+
+Responsible for writing final target records to something. Included concrete implementations include:
+
+* [LogRecordWriter](src/TextWrangler/Writers/LogRecordWriter.cs) (writes target records to the configured [ILogger](https://docs.microsoft.com/en-us/dotnet/api/microsoft.extensions.logging.ilogger?view=aspnetcore-2.2) for the LogRecordWriter type)
+* [CsvRecordWriter](src/TextWrangler/Writers/CsvRecordWriter.cs) (writes target records to a given CSV file/stream)
+* [NullRecordWriter](src/TextWrangler/Writers/NullRecordWriter.cs) (writes target records nowhere, i.e. ignores them)
+
+## [Documentation overview](#documentation-overview)
+
+There's obviously some documentation here in this README, there is also a fairly large amount of [XML documentation comments](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/xmldoc/) on the various types and methods in the source code for reference. 
+
+See the [config file ref](#config-file-reference) section for an overview of the config file format, requirements, samples, etc.
 
 ## [Assumptions](#assumptions)
 
-## [Up next](#upnext)
+* Initially I read the defined target format from the takehome doc as more or less dictating that fields in the target format MUST meet the pseudo-regex's included as a reference (hence why I implemented some filters that throw exceptions when data does not meet given requirements, i.e. alpha-only, or alphanumeric-only). After getting more into the provided data samples, I quickly instead assumed those pseudo-regex's aren't hard requirements, but instead just pointers (the ProductNumber field for example has a regex of [A-Z0-9]+, however ALL of the data includes dashes.  You could approach this at least different ways:
+  * Throw an exception when things don't match
+  * Replace "invalid" characters with some replacement
+  * Extend the allowance regex
+I took the last approach by default (i.e. allow basically any character) since the record type is string. To change this however to work in either of the other 2 approaches would be simple (either updating the config definition, or adding a new IFieldFilter implementation.
+
+* The takehom doc didn't specify anything related to outputing the final correct target data (it did mention to log failed records).  I assumed we'd want a way to output it to one or more places naturally - by default it's just logged, but there's a CSV output writer included as well.
+
+* Normally much of the code I wrote I would have instead opted for leveraging an external library/plugin - i.e. validation, logging, etc. I specifically did not here given the note of "without (significant) external dependencies".
+
+## [Up next](#up-next)
 
 ## [Config File Reference](#config-file-reference)
 
@@ -161,6 +197,4 @@ A simple sample config file that represents most (all?) of the functionality is 
 There are also multiple sample config files included in the project for reference use.
 
 You can also refer to the XML documentation on the [RecordConfiguration.cs](src/TextWrangler/Configuration/RecordConfiguration.cs) and [FieldConfiguration.cs](src/TextWrangler/Models/FieldConfiguration.cs) classes for more detailed information.
- 
-### 
 
