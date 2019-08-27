@@ -93,19 +93,6 @@ There's obviously some documentation here in this README, there is also a fairly
 
 See the [config file ref](#config-file-reference) section for an overview of the config file format, requirements, samples, etc.
 
-## [Assumptions](#assumptions)
-
-* Initially I read the defined target format from the takehome doc as more or less dictating that fields in the target format MUST meet the pseudo-regex's included as a reference (hence why I implemented some filters that throw exceptions when data does not meet given requirements, i.e. alpha-only, or alphanumeric-only). After getting more into the provided data samples, I quickly instead assumed those pseudo-regex's aren't hard requirements, but instead just pointers (the ProductNumber field for example has a regex of [A-Z0-9]+, however ALL of the data includes dashes.  You could approach this at least different ways:
-  * Throw an exception when things don't match
-  * Replace "invalid" characters with some replacement
-  * Extend the allowance regex
-
-I took the last approach by default (i.e. allow basically any character) since the record type is string. To change this however to work in either of the other 2 approaches would be simple (either updating the config definition, or adding a new IFieldFilter implementation.
-
-* The takehom doc didn't specify anything related to outputing the final correct target data (it did mention to log failed records).  I assumed we'd want a way to output it to one or more places naturally - by default it's just logged, but there's a CSV output writer included as well.
-
-* Normally much of the code I wrote I would have instead opted for leveraging an external library/plugin - i.e. validation, logging, etc. I specifically did not here given the note of "without (significant) external dependencies".
-
 ## [Up next](#up-next)
 
 * From a usability perspective I'd consider removing the current requirement of having the source fields for use on each given target field from being required in the sources list in the config. You'd still have to include it if you want filter it in some way (as you'd have to indicate the filter(s) to run it through), but you shouldn't necessarily have to have it mapped there if you just want to grab it's raw value and use it.
