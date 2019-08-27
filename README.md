@@ -1,4 +1,4 @@
-# TextWrangler
+# TextPipe
 
 ## [Build Test Run](#build-test-run)
 
@@ -9,16 +9,16 @@
 
 * Clone code and build:
 ```bash
-git clone https://github.com/boydc7/textwrangler
-cd textwrangler
+git clone https://github.com/boydc7/textpipe
+cd textpipe
 dotnet publish -c Release -o ../../publish src/TextWrangler.Console/TextWrangler.Console.csproj
 ```
-* Run test suites (from textwrangler folder from above)
+* Run test suites (from textpipe folder from above)
 ```bash
 dotnet test tests/TextWrangler.UnitTests/TextWrangler.UnitTests.csproj
 dotnet test tests/TextWrangler.IntegrationTests/TextWrangler.IntegrationTests.csproj
 ```
-* Run (from textwrangler folder from above)
+* Run (from textpipe folder from above)
 > NOTE: The sample.csv file is a copy of the sample Gist provided from the takehome doc. The recordSample recordType in the textwrangler.json config file can be used to map from any file with data similar to that to the target model record requested in the takehome doc.
 ```bash
 # Show usage:
